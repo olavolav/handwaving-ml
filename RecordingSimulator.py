@@ -14,6 +14,8 @@ class RecordingSimulator:
     self.number_of_electrodes = nr_e
   
   def generate_data(self, nr_per_label=1):
+    random.seed(1234)
+    np.random.seed(1234)
     recordings = []
     for l in range(1, len(self.outcome_labels)): # note that here we skip the null outcome (HACK)
       for trial in range(nr_per_label):
