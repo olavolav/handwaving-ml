@@ -32,17 +32,20 @@ class GaussModel:
         else:
           self.__model_has_been_learned = False
   
-  def compute_nonnorm_log_likelihood(self, recording, electrode_list, sample_index):
+  def compute_nonnorm_log_likelihood(self, recording, electrode_list, sample_index, prior_prob=1.0):
     assert self.__model_has_been_learned
     assert sample_index >= self.__length_in_time
-    log_l = 0.0
+    log_l = math.log(prior_prob)
     for i_electr in electrode_list:
       for t_lag in range(self.__length_in_time):
         d = recording.get_data(i_electr, sample_index-self.__length_in_time+t_lag)
         stddev = self.__stddev_vector[i_electr, t_lag]
-        log_l += -1.0*math.log(stddev * math.sqrt(2.0*PI)) - 0.5*math.pow( d/stddev, 2.0)
+        log_l += -1.0*math.log(stddev * math.sqrt(2.0*PI)) - 0.5*math.pow(d/stddev, 2.0)
     return log_l
 
   def model_has_been_learned(self):
     return self.__model_has_been_learned
+  
+  def get_label_nr(self):
+    return self.__label_nr
   

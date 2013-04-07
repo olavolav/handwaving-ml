@@ -5,7 +5,9 @@ import numpy as np
 from GaussModel import *
 from Recording import *
 
-TRAINING_VECTOR_LENGTH = 40 # number of samples to use for training
+TRAINING_VECTOR_LENGTH = 10 # number of samples to use for training
+PRIOR_PROBABILIY_OF_SWITCHING = 70.0 * 1.0/500.0 # quasi-upper bound on true switching rate
+FORCE_FLAT_PRIOR = False
 
 class BayesClassifier:
   """A Bayesian classifier based on a hidden Markov model analysis."""
@@ -29,9 +31,20 @@ class BayesClassifier:
   def classify(self, recording):
     assert self.has_been_trained()
     prob = np.zeros((self.__number_of_outcomes, recording.get_number_of_samples()), float)
+    # start with flat prior
+    prior_probabilities = np.ones(self.__number_of_outcomes, float) / float(self.__number_of_outcomes)
+    
     for s in range(TRAINING_VECTOR_LENGTH, recording.get_number_of_samples()):
-      log_likelihoods = [m.compute_nonnorm_log_likelihood(recording, range(self.__number_of_electrodes), s) for m in self.__models]
+      log_likelihoods = [m.compute_nonnorm_log_likelihood(recording, range(self.__number_of_electrodes), s, prior_probabilities[m.get_label_nr()]) for m in self.__models]
+      probabilities = [math.exp(l-max(log_likelihoods)) for l in log_likelihoods]
+      probabilities = [p/sum(probabilities) for p in probabilities]
       for o in range(self.__number_of_outcomes):
-        # first we skip exponentiation, TODO
-        prob[o, s] = log_likelihoods[o] - max(log_likelihoods)
+        prob[o, s] = probabilities[o]
+      if(not(FORCE_FLAT_PRIOR)):
+        winner = probabilities.index(max(probabilities))
+        for oo in range(self.__number_of_outcomes):
+          if(oo == winner):
+            prior_probabilities[oo] = 1.0 - PRIOR_PROBABILIY_OF_SWITCHING
+          else:
+            prior_probabilities[oo] = PRIOR_PROBABILIY_OF_SWITCHING/(self.__number_of_outcomes-1)
     return prob

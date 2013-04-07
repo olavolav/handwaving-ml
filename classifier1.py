@@ -32,7 +32,7 @@ print "-> training completed, success = {d}".format(d=analyzer.has_been_trained(
 
 # ------ applying classifier ------
 print "applying classifier..."
-target_recording = recordings[0]
+target_recording = recordings[-1]
 ideal_signal = target_recording.get_labels()
 prediction_result = analyzer.classify( target_recording )
 times = np.arange(target_recording.get_number_of_samples())/SAMPLING_RATE_FOR_PLOTTING
@@ -54,6 +54,7 @@ plt.subplot(312)
 plt.xlabel('sample #')
 plt.ylabel('l_logs')
 plt.plot(times, prediction_result[0], 'grey', times, prediction_result[1], 'red', times, prediction_result[2], 'green')
+plt.ylim(-0.1, 1.1)
 
 plt.subplot(313)
 plt.xlabel('time (s)')
