@@ -26,7 +26,7 @@ class RecordingSimulator:
     for i in range(self.number_of_electrodes):
       for t in range(samples):
         fraction_of_signal = 1.0/(1+ math.exp(-(t-t0)))
-        rec.set_data(i, t, (1.0-fraction_of_signal)*np.random.normal(0.0, 0.1) + fraction_of_signal*(np.random.normal(0.0, 0.2*(label_nr+1)) + (t%2)*0.1-0.05))
+        rec.set_data(i, t, (1.0-fraction_of_signal)*np.random.normal(0.0, 0.1) + fraction_of_signal*(np.random.normal(0.0, 0.2*(label_nr+1)) + (t%(label_nr+1)==0)*0.15-0.015/(2.0*(label_nr+1))))
         rec.set_label(t, label_nr if t >= t0 else 0)
     return rec
   

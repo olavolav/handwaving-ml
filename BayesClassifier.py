@@ -5,7 +5,7 @@ import numpy as np
 from GaussModel import *
 from Recording import *
 
-TRAINING_VECTOR_LENGTH = 20 # number of samples to use for training
+TRAINING_VECTOR_LENGTH = 40 # number of samples to use for training
 
 class BayesClassifier:
   """A Bayesian classifier based on a hidden Markov model analysis."""
