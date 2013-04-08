@@ -5,8 +5,9 @@ import numpy as np
 from GaussModel import *
 from Recording import *
 
-TRAINING_VECTOR_LENGTH = 20 # number of samples to use for training
-PRIOR_PROBABILIY_OF_SWITCHING = 70.0 * 1.0/500.0 # quasi-upper bound on true switching rate
+TRAINING_VECTOR_LENGTH = 250 # number of samples to use for training
+# PRIOR_PROBABILIY_OF_SWITCHING = 70.0 * 1.0/500.0 # quasi-upper bound on true switching rate
+PRIOR_PROBABILIY_OF_SWITCHING = 10.0/360000.0 # DH's real data
 FORCE_FLAT_PRIOR = False
 
 class BayesClassifier:
@@ -21,9 +22,7 @@ class BayesClassifier:
   def learn_models(self, recordings):
     for m in self.__models:
       m.learn_based_on_recordings(recordings)
-  
-  def compute_log_likelihoods(self, rec, e_list):
-    pass
+      print "-> completed learning of model #{l}.".format(l=m.get_label_nr())
   
   def has_been_trained(self):
     return [m.model_has_been_learned() for m in self.__models] == [True for _ in range(len(self.__models))]
