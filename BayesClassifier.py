@@ -5,7 +5,7 @@ import numpy as np
 from GaussModel import *
 from Recording import *
 
-TRAINING_VECTOR_LENGTH = 10 # number of samples to use for training
+TRAINING_VECTOR_LENGTH = 20 # number of samples to use for training
 PRIOR_PROBABILIY_OF_SWITCHING = 70.0 * 1.0/500.0 # quasi-upper bound on true switching rate
 FORCE_FLAT_PRIOR = False
 

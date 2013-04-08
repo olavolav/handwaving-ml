@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import numpy.dual as npdual
 
 class Recording:
   """A (labeled or unlabeled) data set from the electrodes of the recording device."""
@@ -68,4 +69,17 @@ class Recording:
   
   def get_label_of_sample(self, index):
     return self.__labels[index]
+  
+  def get_power_spectrum_of_sample_range(self, electrode_index, start_index, end_index):
+    if electrode_index < 0 or electrode_index > self.get_number_of_electrodes()-1:
+      raise RuntimeError("invalid electrode index")
+    if start_index < 0 or start_index > self.get_number_of_samples()-1:
+      raise RuntimeError("invalid start sample index")
+    if end_index > self.get_number_of_samples()-1:
+      raise RuntimeError("invalid end sample index")
+    if start_index > end_index:
+      raise RuntimeError("end sample index must be greater than start sample index")
+    
+    # return power spectrum of cutout
+    return np.abs( npdual.fft( self.__data[electrode_index, start_index:end_index+1] ) )**2
   
