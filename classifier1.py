@@ -6,6 +6,7 @@ from Recording import *
 from BayesClassifier import *
 
 OUTCOME_LABELS = {"null", "test1", "test2"}
+INPUT_FILENAME = 'data/EMGDaten_Olav-20130407.txt'
 USE_SIMULATED_SIGNALS = True
 NUMBER_OF_ELECTRODES = 1
 SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
@@ -18,11 +19,15 @@ if(USE_SIMULATED_SIGNALS):
   from RecordingSimulator import *
   sim = RecordingSimulator(NUMBER_OF_ELECTRODES, OUTCOME_LABELS)
   recordings = sim.generate_data(1)
-  # recordings[0].plot()
-  # recordings[-1].plot()
 else:
   print "loading recordings from file..."
+  from RecordingFileHandler import *
+  input_from_disk = RecordingFileHandler(INPUT_FILENAME)
+  recordings = input_from_disk.load_recordings()
+  NUMBER_OF_ELECTRODES = recordings[0].get_number_of_electrodes() # override default
 print "-> number of recordings: {n}".format(n=len(recordings))
+# recordings[0].plot()
+# recordings[-1].plot()
 
 # ------ training classifier ------
 print "training classifier..."
@@ -45,14 +50,14 @@ for t in range(len(prediction_result[0])):
     hits += 1
 print "-> final accuracy: {x}%".format(x=(100.0*hits)/len(prediction_result[0]))
 
-# ------ pot result ------
+# ------ plot result ------
 plt.subplot(311)
 plt.ylabel('signal -1')
 plt.plot(times, target_recording.get_whole_data(0))
 
 plt.subplot(312)
 plt.xlabel('sample #')
-plt.ylabel('l_logs')
+plt.ylabel('prob.')
 plt.plot(times, prediction_result[0], 'grey', times, prediction_result[1], 'red', times, prediction_result[2], 'green')
 plt.ylim(-0.1, 1.1)
 
