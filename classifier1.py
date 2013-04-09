@@ -11,7 +11,8 @@ INPUT_FILENAME = 'data/EMGDaten_Olav-20130408.txt'
 USE_SIMULATED_SIGNALS = False
 NUMBER_OF_ELECTRODES = 1
 SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
-PLOT_RESULT_AT_THE_END = True
+PLOT_RESULT_AT_THE_END = False
+SAVE_PLOT_AS_IMAGE_AT_THE_END = True
 
 print "--- HMM classifier, OS, April 2013 ---"
 
@@ -53,8 +54,8 @@ for t in range(len(prediction_result[0])):
 print "-> final accuracy: {x}%".format(x=(100.0*hits)/len(prediction_result[0]))
 
 # ------ plot result ------
-if PLOT_RESULT_AT_THE_END:
-  print "plotting..."
+if PLOT_RESULT_AT_THE_END or SAVE_PLOT_AS_IMAGE_AT_THE_END:
+  print "preparing plots..."
   times = np.arange(target_recording.get_number_of_samples())/SAMPLING_RATE_FOR_PLOTTING
   plt.subplot(311)
   plt.ylabel('signal -1')
@@ -72,4 +73,13 @@ if PLOT_RESULT_AT_THE_END:
   plt.ylabel('l. vs. pred.')
   plt.plot(times, ideal_signal, 'g', times, final_prediction, 'r')
   plt.ylim(-0.5, len(OUTCOME_LABELS)-0.5)
-  plt.show()
+  
+  if PLOT_RESULT_AT_THE_END:
+    print "displaying plots..."
+    plt.show()
+  if SAVE_PLOT_AS_IMAGE_AT_THE_END:
+    print "saving plot as PNG..."
+    plt.savefig('output.png')
+    print "saving plot as PDF..."
+    plt.savefig('output.pdf')
+print "done."
