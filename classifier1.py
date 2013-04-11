@@ -5,14 +5,24 @@ import time as time
 from Recording import *
 from BayesClassifier import *
 
-# OUTCOME_LABELS = {"null", "test1", "test2"}
-OUTCOME_LABELS = {"null", "h. open", "h. close", "w. flexion" , "w. extension", "w. pronation", "w. subination", "w. abduction", "w. adduction"}
-INPUT_FILENAME = 'data/EMGDaten_Olav-20130408.txt'
-USE_SIMULATED_SIGNALS = False
+# ------ set-up: simulation and testing ------
+OUTCOME_LABELS = {"null", "test1"} #, "test2"}
+INPUT_FILENAME = ''
+USE_SIMULATED_SIGNALS = True
 NUMBER_OF_ELECTRODES = 1
 SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
-PLOT_RESULT_AT_THE_END = False
-SAVE_PLOT_AS_IMAGE_AT_THE_END = True
+PLOT_RESULT_AT_THE_END = True
+SAVE_PLOT_AS_IMAGE_AT_THE_END = False
+
+# ------ set-up: recordings from DH, computation in the background ------
+# OUTCOME_LABELS = {"null", "h. open", "h. close", "w. flexion" , "w. extension", "w. pronation", "w. subination", "w. abduction", "w. adduction"}
+# INPUT_FILENAME = 'data/EMGDaten_Olav-20130408.txt'
+# USE_SIMULATED_SIGNALS = True
+# NUMBER_OF_ELECTRODES = 1
+# SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
+# PLOT_RESULT_AT_THE_END = True
+# SAVE_PLOT_AS_IMAGE_AT_THE_END = False
+
 
 print "--- HMM classifier, OS, April 2013 ---"
 
@@ -21,7 +31,7 @@ if(USE_SIMULATED_SIGNALS):
   print "simulating recordings..."
   from RecordingSimulator import *
   sim = RecordingSimulator(NUMBER_OF_ELECTRODES, OUTCOME_LABELS)
-  recordings = sim.generate_data(1)
+  recordings = sim.generate_data(3)
 else:
   print "loading recordings from file..."
   from RecordingFileHandler import *
@@ -29,6 +39,7 @@ else:
   recordings = input_from_disk.load_recordings()
   NUMBER_OF_ELECTRODES = recordings[0].get_number_of_electrodes() # override default
 print "-> number of recordings: {n}".format(n=len(recordings))
+print "-> number of electrodes: {n}".format(n=NUMBER_OF_ELECTRODES)
 print "-> number of samples of first recording: {n}".format(n=recordings[0].get_number_of_samples())
 # recordings[0].plot()
 # recordings[-1].plot()
@@ -60,6 +71,7 @@ if PLOT_RESULT_AT_THE_END or SAVE_PLOT_AS_IMAGE_AT_THE_END:
   plt.subplot(311)
   plt.ylabel('signal -1')
   plt.plot(times, target_recording.get_whole_data(0))
+  plt.title("data of DH, accuracy {x}%".format(x=(100.0*hits)/len(prediction_result[0])))
 
   plt.subplot(312)
   plt.xlabel('sample #')

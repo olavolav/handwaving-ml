@@ -62,21 +62,47 @@ class GaussModelFrequencyDomain(GaussModel):
   
   def learn_based_on_recordings(self, recs):
     self._model_has_been_learned = True
+    relevant_sample_points = np.zeros(MAX_SAMPLES_PER_INFERRED_VARIABLE, float)
     for e in range(self._number_of_electrodes):
       # print "DEBUG: e = {x}".format(x=e)
       for freq_component in range(self._length_in_time):
-        relevant_sample_points = np.zeros(0, float)
+        number_of_gathered_points = 0
+        # relevant_sample_points = np.zeros(0, float)
         for rec in recs:
           for s in range(self._length_in_time, rec.get_number_of_samples()):
             if(rec.get_label_of_sample(s) == self._label_nr):
               # so, if this is a sample point with the label of this model at sample #s
-              spectrum = rec.get_power_spectrum_of_sample_range(e, s-self._length_in_time, s)
-              relevant_sample_points = np.append(relevant_sample_points, spectrum[self._length_in_time-freq_component])
-              if len(relevant_sample_points) > MAX_SAMPLES_PER_INFERRED_VARIABLE: break
+              if number_of_gathered_points >= MAX_SAMPLES_PER_INFERRED_VARIABLE: break
+              spectrum = rec.get_power_spectrum_of_sample_range(e, s-self._length_in_time + 1, s)
+              relevant_sample_points[number_of_gathered_points] = spectrum[-(freq_component+1)]
+              number_of_gathered_points += 1
         if len(sets.Set(relevant_sample_points)) > 1:
           self._mean_vector[e, freq_component] = np.mean(relevant_sample_points)
           self._stddev_vector[e, freq_component] = np.std(relevant_sample_points)
         else:
           self._model_has_been_learned = False
+  
+
+class GaussModelCombinedDomains:
+  
+  def __init__(self, nr_e, v_length, l_nr):
+    self._label_nr = l_nr
+    self._number_of_electrodes = nr_e
+    self._length_in_time = v_length
+    self.time_domain_model = GaussModel(nr_e, v_length, l_nr)
+    self.freq_domain_model = GaussModelFrequencyDomain(nr_e, v_length, l_nr)
+  
+  def learn_based_on_recordings(self, recs):
+    self.time_domain_model.learn_based_on_recordings(recs)
+    self.freq_domain_model.learn_based_on_recordings(recs)
+  
+  def compute_nonnorm_log_likelihood(self, recording, electrode_list, sample_index, prior_prob=1.0):
+    return self.time_domain_model.compute_nonnorm_log_likelihood(recording, electrode_list, sample_index, prior_prob) + self.freq_domain_model.compute_nonnorm_log_likelihood(recording, electrode_list, sample_index, prior_prob)
+  
+  def model_has_been_learned(self):
+    return ( self.time_domain_model.model_has_been_learned() and  self.freq_domain_model.model_has_been_learned() )
+  
+  def get_label_nr(self):
+    return self._label_nr
   
 

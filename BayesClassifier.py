@@ -5,9 +5,10 @@ import numpy as np
 from GaussModel import *
 from Recording import *
 
-TRAINING_VECTOR_LENGTH = 250 # number of samples to use for training
+TRAINING_VECTOR_LENGTH = 80 #250 # number of samples to use for training
 # PRIOR_PROBABILIY_OF_SWITCHING = 70.0 * 1.0/500.0 # quasi-upper bound on true switching rate
-PRIOR_PROBABILIY_OF_SWITCHING = 10.0/360000.0 # DH's real data
+# PRIOR_PROBABILIY_OF_SWITCHING = 10.0/360000.0 # DH's real data
+PRIOR_PROBABILIY_OF_SWITCHING = 10.0/1200.0 # simulated data
 FORCE_FLAT_PRIOR = False
 
 class BayesClassifier:
@@ -17,7 +18,7 @@ class BayesClassifier:
     self.__number_of_outcomes = len(labels)
     self.__number_of_electrodes = nr_e
     self.__outcome_labels = labels
-    self.__models = [GaussModel(self.__number_of_electrodes, TRAINING_VECTOR_LENGTH, l) for l in range(self.__number_of_outcomes)]
+    self.__models = [GaussModelCombinedDomains(self.__number_of_electrodes, TRAINING_VECTOR_LENGTH, l) for l in range(self.__number_of_outcomes)]
   
   def learn_models(self, recordings):
     for m in self.__models:

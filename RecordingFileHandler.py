@@ -16,7 +16,7 @@ class RecordingFileHandler:
     except IOError as e:
       print "I/O error({0}): {1}".format(e.errno, e.strerror)
     
-    samples = data.size # a single recording
+    samples = data.size/3 # a single recording
     # samples = round(samples*0.03) # SPEEDUP HACK
     nr_electrodes = data[0].size - 1 # first column is labels
     

@@ -22,8 +22,8 @@ class RecordingSimulator:
         recordings.append( self.__generate_single_trial(l) )
     return recordings
   
-  def __generate_single_trial(self, label_nr, samples=500):
-    t0 = round(0.5*samples)
+  def __generate_single_trial(self, label_nr, samples=1200):
+    t0 = 0.5*samples
     rec = Recording(self.number_of_electrodes, samples)
     for i in range(self.number_of_electrodes):
       for t in range(samples):
