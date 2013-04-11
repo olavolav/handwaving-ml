@@ -5,10 +5,9 @@ import numpy as np
 from GaussModel import *
 from Recording import *
 
-TRAINING_VECTOR_LENGTH = 80 #250 # number of samples to use for training
-# PRIOR_PROBABILIY_OF_SWITCHING = 70.0 * 1.0/500.0 # quasi-upper bound on true switching rate
-# PRIOR_PROBABILIY_OF_SWITCHING = 10.0/360000.0 # DH's real data
-PRIOR_PROBABILIY_OF_SWITCHING = 10.0/1200.0 # simulated data
+TRAINING_VECTOR_LENGTH = 250 # number of samples to use for training
+PRIOR_PROBABILIY_OF_SWITCHING = 10.0/7500.0 # DH's real data
+# PRIOR_PROBABILIY_OF_SWITCHING = 10.0/1200.0 # simulated data
 FORCE_FLAT_PRIOR = False
 
 class BayesClassifier:

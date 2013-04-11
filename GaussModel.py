@@ -5,7 +5,7 @@ import numpy as np
 import sets as sets
 
 PI = 3.141
-MAX_SAMPLES_PER_INFERRED_VARIABLE = 100000
+MAX_SAMPLES_PER_INFERRED_VARIABLE = 37500 # meaning the first 5 iterations in the DH data set
 
 class GaussModel:
   """Model of signal (likelihood function)."""

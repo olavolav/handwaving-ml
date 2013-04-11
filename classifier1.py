@@ -6,22 +6,22 @@ from Recording import *
 from BayesClassifier import *
 
 # ------ set-up: simulation and testing ------
-OUTCOME_LABELS = {"null", "test1"} #, "test2"}
-INPUT_FILENAME = ''
-USE_SIMULATED_SIGNALS = True
-NUMBER_OF_ELECTRODES = 1
-SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
-PLOT_RESULT_AT_THE_END = True
-SAVE_PLOT_AS_IMAGE_AT_THE_END = False
-
-# ------ set-up: recordings from DH, computation in the background ------
-# OUTCOME_LABELS = {"null", "h. open", "h. close", "w. flexion" , "w. extension", "w. pronation", "w. subination", "w. abduction", "w. adduction"}
-# INPUT_FILENAME = 'data/EMGDaten_Olav-20130408.txt'
+# OUTCOME_LABELS = {"null", "test1"} #, "test2"}
+# INPUT_FILENAME = ''
 # USE_SIMULATED_SIGNALS = True
 # NUMBER_OF_ELECTRODES = 1
 # SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
 # PLOT_RESULT_AT_THE_END = True
 # SAVE_PLOT_AS_IMAGE_AT_THE_END = False
+
+# ------ set-up: recordings from DH, computation in the background ------
+OUTCOME_LABELS = {"null", "h. open", "h. close", "w. flexion" , "w. extension", "w. pronation", "w. subination", "w. abduction", "w. adduction"}
+INPUT_FILENAME = 'data/EMGDaten_Olav-20130408.txt'
+USE_SIMULATED_SIGNALS = False
+NUMBER_OF_ELECTRODES = 1
+SAMPLING_RATE_FOR_PLOTTING = 2500.0 # in Hz
+PLOT_RESULT_AT_THE_END = True
+SAVE_PLOT_AS_IMAGE_AT_THE_END = False
 
 
 print "--- HMM classifier, OS, April 2013 ---"
@@ -83,7 +83,7 @@ if PLOT_RESULT_AT_THE_END or SAVE_PLOT_AS_IMAGE_AT_THE_END:
   plt.subplot(313)
   plt.xlabel('time (s)')
   plt.ylabel('l. vs. pred.')
-  plt.plot(times, ideal_signal, 'g', times, final_prediction, 'r')
+  plt.plot(times, final_prediction, 'r', times, ideal_signal, 'g')
   plt.ylim(-0.5, len(OUTCOME_LABELS)-0.5)
   
   if PLOT_RESULT_AT_THE_END:
